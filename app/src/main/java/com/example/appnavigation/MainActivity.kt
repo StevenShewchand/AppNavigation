@@ -186,7 +186,7 @@ fun ContactScreen(onBackClick: () -> Unit) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1E1E1E),
+                    containerColor = Color(0xFF121212),
                     titleContentColor = Color.White
                 )
             )
@@ -198,7 +198,7 @@ fun ContactScreen(onBackClick: () -> Unit) {
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(Color(0xFF121212))
+                .background(Color(0xFF1E1E1E))
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
