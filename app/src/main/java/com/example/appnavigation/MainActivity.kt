@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +32,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,60 +80,91 @@ fun TwoPageApp() {
     }
 }
 
+
+
 @Composable
 fun HomeScreen(onContactClick: () -> Unit) {
 
-    // Simple list of strings for scrollable content
-    val itemsList = listOf(
-        "Item 1: Something here",
-        "Item 2: More content",
-        "Item 3: Another thing",
-        "Item 4: More text",
-        "Item 5: etc...",
-        "Item 6",
-        "Item 7",
-        "Item 8",
-        "Item 9",
-        "Item 10"
-    )
+    val slides = Datasource.loadSlides()
+    val gridState = rememberLazyGridState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Home") }
+                title = { Text("Casio Mod Shop") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF121212),
+                    titleContentColor = Color.White
+                )
             )
         }
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(Color(0xFF1E1E1E)  )
         ) {
 
-            // Button to go to contact screen
             Button(
                 onClick = onContactClick,
                 modifier = Modifier
                     .padding(16.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
             ) {
-                Text(text = "Go to Contact Page")
+                Text("Go to Contact Page")
             }
 
-            // Scrollable list
-            LazyColumn(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = gridState,
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(itemsList) { item ->
-                    Text(
-                        text = item,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                items(slides) { slide ->
+                    SlideCard(
+                        slide = slide,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun SlideCard(slide: Slide, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Black
+        )
+    ) {
+        Column {
+            Image(
+                painter = painterResource(id = slide.imageRes),
+                contentDescription = slide.caption,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF424242))
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = slide.caption,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
             }
         }
     }
@@ -136,22 +175,30 @@ fun ContactScreen(onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Contact") },
+                title = { Text("Contact", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1E1E1E),
+                    titleContentColor = Color.White
+                )
             )
-        }
+        },
+        containerColor = Color(0xFF121212)
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(Color(0xFF121212))
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -168,19 +215,36 @@ fun ContactScreen(onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Name: Your Name Here",
-                style = MaterialTheme.typography.titleMedium
+                text = "Steven Shewchand",
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.White
+
             )
             Text(
-                text = "Email: you@example.com",
+                text = "Instagram: https://www.instagram.com/casiomodshop/",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp),
+                color = Color.White
             )
             Text(
-                text = "Phone: (555) 123-4567",
+                text = "Email: stevenshewchand@gmail.com",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp),
+                color = Color.White
             )
+            Text(
+                text = "Phone: (347)-515-8580",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 4.dp),
+                color = Color.White
+            )
+            Text(
+                text = "Github: https://github.com/StevenShewchand",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 4.dp),
+                color = Color.White
+            )
+
         }
     }
 }
