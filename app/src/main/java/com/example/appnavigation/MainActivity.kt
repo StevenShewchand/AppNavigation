@@ -2,6 +2,8 @@
 package com.example.appnavigation
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +39,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +119,7 @@ fun HomeScreen(onContactClick: () -> Unit) {
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                Text("Go to Contact Page")
+                Text("Order Yours Here!!")
             }
 
             LazyVerticalGrid(
@@ -169,7 +175,22 @@ fun SlideCard(slide: Slide, modifier: Modifier = Modifier) {
         }
     }
 }
+@Composable
+fun HyperlinkText(label: String, url: String) {
+    val context = LocalContext.current
 
+    ClickableText(
+        text = AnnotatedString(label),
+        style = MaterialTheme.typography.bodyMedium.copy(
+            color = Color.White,
+            textDecoration = TextDecoration.Underline
+        ),
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            context.startActivity(intent)
+        }
+    )
+}
 @Composable
 fun ContactScreen(onBackClick: () -> Unit) {
     Scaffold(
@@ -214,36 +235,35 @@ fun ContactScreen(onBackClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Steven Shewchand",
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp),   // <-- spacing between each link
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
 
-            )
-            Text(
-                text = "Instagram: https://www.instagram.com/casiomodshop/",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp),
-                color = Color.White
-            )
-            Text(
-                text = "Email: stevenshewchand@gmail.com",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp),
-                color = Color.White
-            )
-            Text(
-                text = "Phone: (347)-515-8580",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp),
-                color = Color.White
-            )
-            Text(
-                text = "Github: https://github.com/StevenShewchand",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp),
-                color = Color.White
-            )
+                HyperlinkText(
+                    label = "Instagram: @casiomodshop",
+                    url = "https://www.instagram.com/casiomodshop/"
+                )
+
+                HyperlinkText(
+                    label = "Phone: (347) 515-8580",
+                    url = "tel:3475158580"
+                )
+
+                HyperlinkText(
+                    label = "GitHub: StevenShewchand",
+                    url = "https://github.com/StevenShewchand"
+                )
+
+                HyperlinkText(
+                    label = "Email: stevenshewchand@gmail.com",
+                    url = "mailto:stevenshewchand@gmail.com"
+                )
+
+            }
 
         }
     }
